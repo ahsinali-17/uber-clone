@@ -9,6 +9,7 @@ import WaitingForDriver from "../components/WaitingForDriver";
 import axios from "axios";
 import { SocketContext } from "../context/SocketContext";
 import { UserDataContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -16,7 +17,6 @@ const Home = () => {
   const [currentInput, setCurrentInput] = useState("pickup");
   const [vehicle, setVehicle] = useState("car");
   const [fare, setFare] = useState({});
-  const [distime, setDistime] = useState("");
   const [ride, setRide] = useState({});
   const [panelopen, setpanelopen] = useState(false);
   const [openvehiclePanel, setOpenvehiclePanel] = useState(false);
@@ -33,10 +33,29 @@ const Home = () => {
 
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserDataContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
+  const getCoordinates = async (address) => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-coordinates`,
+        {
+          params: { address },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error("Error fetching coordinates:", response.data.error);
+      }
+    }
 
   useGSAP(() => {
     //panelopen
@@ -132,8 +151,6 @@ const Home = () => {
     getFare(pickup, destination);
   },[pickup, destination]);
 
-  // console.log(fare)
-
   useEffect(() => {
     if (socket) {
    socket.emit("join", { userId: user._id, userType: "user" });
@@ -141,7 +158,19 @@ const Home = () => {
     else {
       console.log("Socket is not connected");
     }
-  },[user])
+
+    socket.on("ride-accepted", (data) => {
+      setRide(data);
+      setWaitingForDriverPanel(true);
+      setLookingForDriverPanel(false);
+    })
+
+    socket.on("ride-started", (data) => {
+      setWaitingForDriverPanel(false);
+      setLookingForDriverPanel(false);
+      navigate("/riding");
+    })
+  },[user,socket])
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
@@ -208,17 +237,17 @@ const Home = () => {
 
       {/*Confirm ride*/}
       <div ref={confirmRidePanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
-       <ConfirmRide setRide= {setRide} pickup={pickup} destination={destination} vehicle={vehicle} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setLookingForDriverPanel={setLookingForDriverPanel}/>
+       <ConfirmRide setRide= {setRide} pickup={pickup} destination={destination} vehicle={vehicle} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setLookingForDriverPanel={setLookingForDriverPanel} getCoordinates={getCoordinates}/>
       </div>
 
       {/*Looking for a driver */}
       <div ref={lookingForDriverPanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
-       <LookingForDriver setRide= {setRide} pickup={pickup} destination={destination} vehicle={vehicle} fare={fare} setLookingForDriverPanel={setLookingForDriverPanel} setWaitingForDriverPanel={setWaitingForDriverPanel}/>
+       <LookingForDriver ride={ride} pickup={pickup} destination={destination} vehicle={vehicle} fare={fare} setLookingForDriverPanel={setLookingForDriverPanel} setWaitingForDriverPanel={setWaitingForDriverPanel} getCoordinates={getCoordinates}/>
       </div>
 
       {/*Waiting for the driver*/}
       <div ref={waitingForDriverPanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
-       <WaitingForDriver setWaitingForDriverPanel={setWaitingForDriverPanel} />
+       <WaitingForDriver setWaitingForDriverPanel={setWaitingForDriverPanel} ride={ride}/>
       </div>
     </div>
   );

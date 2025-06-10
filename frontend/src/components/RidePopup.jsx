@@ -1,6 +1,6 @@
 import React from 'react'
 import { MapPinHouse, Navigation, CircleDollarSign } from "lucide-react";
-const RidePopup = ({rideDetails ,setRidePopup,setConfirmRidePopup}) => {
+const RidePopup = ({rideDetails ,setRidePopup,setConfirmRidePopup,confirmRide}) => {
   return (
     <>
        {" "}
@@ -20,7 +20,7 @@ const RidePopup = ({rideDetails ,setRidePopup,setConfirmRidePopup}) => {
         <div className='flex items-center justify-between w-full bg-yellow-400 rounded-lg p-3'>
             <div className='flex items-center gap-2'>
                 <img className='h-12 w-12 rounded-full object-cover' src="https://i.pinimg.com/564x/47/74/c1/4774c16ed57e7eff960a338e5a57d71d.jpg" alt="" />
-                <h4 className='text-2xl font-semibold'>{rideDetails?._doc?.user?.fullname?.firstname + " " + rideDetails?._doc?.user?.fullname?.lastname}</h4>
+                <h4 className='text-2xl font-semibold'>{rideDetails?.user?.fullname?.firstname + " " + rideDetails?.user?.fullname?.lastname}</h4>
             </div>
             <h4 className='text-xl font-bold text-gray-700'>2.2 KM</h4>
         </div>
@@ -29,17 +29,16 @@ const RidePopup = ({rideDetails ,setRidePopup,setConfirmRidePopup}) => {
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <MapPinHouse />
             <div>
-              <h2 className="text-lg font-semibold">{rideDetails?._doc?.pickup}</h2>
-              <p className="text-gray-600 text-md">{rideDetails?._doc?.pickup}</p>
+              <h2 className="text-lg font-semibold">{rideDetails?.pickup}</h2>
+              <p className="text-gray-600 text-md">{rideDetails?.pickup}</p>
             </div>
           </div>
-
           
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <Navigation />
             <div>
-              <h2  className="text-lg font-semibold">{rideDetails?._doc?.destination}</h2>
-              <p className="text-gray-600 text-md">{rideDetails?._doc?.destination}</p>
+              <h2  className="text-lg font-semibold">{rideDetails?.destination}</h2>
+              <p className="text-gray-600 text-md">{rideDetails?.destination}</p>
             </div>
           </div>
           
@@ -48,7 +47,7 @@ const RidePopup = ({rideDetails ,setRidePopup,setConfirmRidePopup}) => {
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <CircleDollarSign /> 
             <div>
-              <h2  className="text-lg font-semibold">{rideDetails?._doc?.fare}</h2>
+              <h2  className="text-lg font-semibold">{rideDetails?.fare}</h2>
               <p className="text-gray-600 text-md">Cash Cash</p>
             </div>
           </div>
@@ -58,6 +57,7 @@ const RidePopup = ({rideDetails ,setRidePopup,setConfirmRidePopup}) => {
         <button onClick={()=>{
            setRidePopup(false);
            setConfirmRidePopup(true);
+           confirmRide()
         }} className="bg-green-600 w-full text-center font-semibold text-white text-lg p-2 rounded-lg">Accept</button>
         <button onClick={()=>{
           setRidePopup(false);

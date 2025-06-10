@@ -1,7 +1,6 @@
 const Ride = require('../models/ride.model.js')
-const {getDisTime, getAddCoordinates} = require('../services/maps.services.js')
+const {getDisTime, getAddCoordinates, getCaptainInRange} = require('../services/maps.services.js')
 const {validationResult} = require("express-validator")
-const {getCaptainInRange} = require('../services/maps.services.js')
 const {sendMsgToSocketId} = require('../socket.js')
 const crypto = require('crypto'); //to create random otps
 
@@ -15,7 +14,7 @@ const calculatePrice = async (address1, address2) => {
      throw new Error(distanceTime.error)
    }
 const { distance, duration } = distanceTime;
-console.log(distance, Number.parseInt(distance))
+// console.log(distance, Number.parseInt(distance))
 const baseRate = {
     bike: 20,
     auto: 30,
@@ -64,12 +63,12 @@ const createRide = async (req, res) => {
         await ride.save();
 
         res.status(201).json({ message: 'Ride created successfully', ride });
-
+          
         ride.otp = "";
-        
-        rideUser = await Ride.findOne({ _id: ride._id }).populate("user");
+
+        rideUser = JSON.parse(JSON.stringify( await Ride.findOne({ _id: ride._id }).populate("user")))
          const pickupCoordinates = await getAddCoordinates(pickup);
-         const captainsInRange = await getCaptainInRange(pickupCoordinates.ltd, pickupCoordinates.lng, 20); // 2km radius
+         const captainsInRange = await getCaptainInRange(pickupCoordinates.ltd, pickupCoordinates.lng, 20); // 20km radius
         if (captainsInRange.length > 0) {
           captainsInRange.map((captain) => {
             sendMsgToSocketId({event:"new-ride", data:{...rideUser}}, captain.socketId);
@@ -97,4 +96,59 @@ const getFare = async (req, res) => {
   res.status(200).json({ fare });
 }
 
-module.exports = {createRide, getFare}
+const acceptRide = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("errors in req")
+      return res.status(400).json({ errors: errors.array()});
+  }
+
+  const {captainId,rideId} = req.body;
+  try {
+    const ride = await Ride.findOneAndUpdate({_id: rideId}, {captain: captainId, status: "accepted"});
+
+    if (!ride) {
+      return res.status(404).json({ error: "Ride not found" });
+    }
+
+    const rideUser = JSON.parse(JSON.stringify(await Ride.findOne({ _id: ride._id }).populate("user").populate("captain").select("+otp")));
+    res.status(200).json({message: "Ride accepted successfully", rideUser});
+
+    sendMsgToSocketId({event:"ride-accepted", data:{...rideUser}}, rideUser.user.socketId);
+    console.log("msg sent to user")
+  } catch (error) {
+    return res.status(500).json({error: error.message});
+  }
+}
+
+const startRide = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("errors in req")
+      return res.status(400).json({ errors: errors.array()});
+  }
+
+  const {rideId, otp} = req.query;
+  const captain = req.captain
+  try {
+    const ride = await Ride.findOne({_id: rideId}).select("+otp").populate("captain").populate("user");
+    if (!ride) {
+      return res.status(404).json({ error: "Ride not found" });
+    }
+    if (ride.otp !== otp) {
+      return res.status(400).json({ error: "Invalid OTP" });
+    }
+    if(captain.fullname.firstname !== ride.captain.fullname.firstname){
+      return res.status(400).json({ error: "You are not authorized to start this ride" });
+    }
+    res.status(200).json({message: "Ride started successfully", ride});
+
+    sendMsgToSocketId({event:"ride-started", data:{msg:"ride started..."}}, ride.user.socketId);
+    console.log("msg sent to user")
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({error: error.message});
+  }
+}
+
+module.exports = {createRide, getFare, acceptRide, startRide}

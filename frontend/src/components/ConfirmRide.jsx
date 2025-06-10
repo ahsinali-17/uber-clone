@@ -8,32 +8,12 @@ const ConfirmRide = ({ setConfirmRidePanel, setLookingForDriverPanel, vehicle ="
   const [destinationcoordinates, setDestinationCoordinates] = useState({});
 
   useEffect(() => {
-    const getCoordinates = async (address) => {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/maps/get-coordinates`,
-        {
-          params: { address },
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        console.error("Error fetching coordinates:", response.data.error);
-      }
-    }
-
-    if(pickup.length > 3 && destination.length > 3){
       getCoordinates(pickup).then((data) => {
         setPickupCoordinates(data);
       });
       getCoordinates(destination).then((data) => {
         setDestinationCoordinates(data);
       });
-    }
   },[pickup, destination]);
    
   const vehicleImgs = {
@@ -94,7 +74,7 @@ const ConfirmRide = ({ setConfirmRidePanel, setLookingForDriverPanel, vehicle ="
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <MapPinHouse />
             <div>
-              <h2 className="text-lg font-semibold">{pickupcoordinates.lat + "/" + pickupcoordinates.lng}</h2>
+              <h2 className="text-lg font-semibold">{pickupcoordinates?.ltd + "/" + pickupcoordinates?.lng}</h2>
               <p className="text-gray-600 text-md">{pickup}</p>
             </div>
           </div>
@@ -103,7 +83,7 @@ const ConfirmRide = ({ setConfirmRidePanel, setLookingForDriverPanel, vehicle ="
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <Navigation />
             <div>
-              <h2  className="text-lg font-semibold">{destinationcoordinates.lat + "/" + destinationcoordinates.lng}</h2>
+              <h2  className="text-lg font-semibold">{destinationcoordinates?.ltd + "/" + destinationcoordinates?.lng}</h2>
               <p className="text-gray-600 text-md">{destination}</p>
             </div>
           </div>

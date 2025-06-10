@@ -66,4 +66,8 @@ const logout = async (req,res)=>{
     res.status(200).json({msg: 'Captain logged out successfully'});
 }
 
-module.exports = {register,login,logout};
+const getProfile = async (req,res)=>{
+    res.status(200).json({captain: req.captain})
+}
+
+module.exports = {register,login,logout,getProfile};

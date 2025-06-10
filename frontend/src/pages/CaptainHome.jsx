@@ -8,6 +8,7 @@ import gsap from 'gsap'
 import ConfirmRidePopup from '../components/ConfirmRidePopup'
 import {SocketContext} from '../context/SocketContext.jsx'
 import { CaptainDataContext } from '../context/CaptainContext.jsx'
+import axios from 'axios'
 
 const CaptainHome = () => {
   const [ridePopup, setRidePopup] = useState(false);
@@ -19,6 +20,24 @@ const CaptainHome = () => {
 
   const {socket} = useContext(SocketContext);
   const {captain} = useContext(CaptainDataContext);
+
+  const confirmRide = async () => {
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/ride/confirm`, {
+      rideId: rideDetails._id,
+      captainId: captain._id,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("captoken")}`,
+      },
+    }
+  ); 
+    if (response.status === 200) {
+      setRideDetails(response.data.rideUser);
+    } else {
+      console.log("Error confirming ride", response.data.error);
+    }
+  }
 
      //ridepopup
    useGSAP(() => {
@@ -50,19 +69,18 @@ const CaptainHome = () => {
     }
   },[confirmRidePopup])
 
-  socket.on("new-ride", (data) => {
-    setRideDetails(data);
-    setRidePopup(true);
-  });
-
   useEffect(() => {
     if(socket) {
-      socket.emit("join", {userId: captain._id, userType: "captain"});
+      socket.emit("join", {userId: captain?._id, userType: "captain"});
     }else {
       console.log("Socket is not connected");
     }
 
-
+    socket.on("new-ride", (data) => {
+      //console.log(data)
+      setRideDetails(data);
+      setRidePopup(true);
+    });  
 
     const sendCaptainLocation = () => {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -75,11 +93,10 @@ const CaptainHome = () => {
     }
      
     sendCaptainLocation();
-    const interval = setInterval(() => { sendCaptainLocation }, 10000);
-    // return () => {
-    //   clearInterval(interval);
-    // }
-  },[captain]);
+    const interval = setInterval(sendCaptainLocation, 10000);
+    // cleanup interval on unmount
+    return () => clearInterval(interval);
+  },[captain, socket]);
 
       return (
         <div className="h-screen w-screen overflow-hidden relative">
@@ -111,12 +128,12 @@ const CaptainHome = () => {
  
       {/*Ride Popup*/}
       <div ref={ridePopupRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
-       <RidePopup rideDetails={rideDetails} setRidePopup={setRidePopup} setConfirmRidePopup={setConfirmRidePopup}/>
+       <RidePopup rideDetails={rideDetails} setRidePopup={setRidePopup} setConfirmRidePopup={setConfirmRidePopup} confirmRide={confirmRide}/>
       </div>
 
       {/*confirm Ride Popup*/}
       <div ref={confirmRidePopupRef} className="fixed h-screen bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
-       <ConfirmRidePopup setConfirmRidePopup={setConfirmRidePopup} />
+       <ConfirmRidePopup setConfirmRidePopup={setConfirmRidePopup} rideDetails={rideDetails}/>
       </div>
     </div>
   )

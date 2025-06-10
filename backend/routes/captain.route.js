@@ -18,7 +18,7 @@ router.post('/login',[
     body('password').isLength({min:6}).withMessage('Password must be at least 6 characters long')
 ] ,captainController.login);
 
-router.get('/profile', authCaptain ,()=>{});
+router.get('/profile', authCaptain ,captainController.getProfile);
 
 router.get('/logout',captainController.logout);
 

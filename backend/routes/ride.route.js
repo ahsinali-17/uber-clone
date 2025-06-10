@@ -29,5 +29,29 @@ router.get(
     .isLength({ min: 3 }).withMessage("destination is required"),
   rideController.getFare
 );
+ 
+router.post(
+  "/confirm",
+  authMiddleware.authCaptain,
+  body("rideId")
+    .isString()
+    .isLength({ min: 3 }).withMessage("rideId is required"),
+  body("captainId")
+    .isString()
+    .isLength({ min: 3 }).withMessage("captainId is required"),
+  rideController.acceptRide
+);
+
+router.get(
+  "/start-ride",
+  authMiddleware.authCaptain,
+  query("rideId")
+    .isString()
+    .isLength({ min: 3 }).withMessage("rideId is required"),
+  query("otp")
+    .isString()
+    .isLength({ min: 3 }).withMessage("otp is required"),
+  rideController.startRide
+);
 
 module.exports = router;

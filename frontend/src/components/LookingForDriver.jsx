@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { MapPinHouse, Navigation, CircleDollarSign } from "lucide-react";
 import axios from "axios";
 
-const LookingForDriver = ({ setConfirmRidePanel, setLookingForDriverPanel, vehicle ="car", fare, pickup, destination,setWaitingForDriverPanel}) => {
+const LookingForDriver = ({ride, setLookingForDriverPanel, vehicle ="car", fare, pickup, destination,setWaitingForDriverPanel}) => {
 
   const [pickupcoordinates, setPickupCoordinates] = useState({});
   const [destinationcoordinates, setDestinationCoordinates] = useState({});
@@ -47,7 +47,7 @@ const LookingForDriver = ({ setConfirmRidePanel, setLookingForDriverPanel, vehic
           alt=""
           onClick={() => {
             setLookingForDriverPanel(false);
-            setWaitingForDriverPanel(true);
+            //setWaitingForDriverPanel(true);
           }}
           className="cursor-pointer"
         />
@@ -64,7 +64,7 @@ const LookingForDriver = ({ setConfirmRidePanel, setLookingForDriverPanel, vehic
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <MapPinHouse />
             <div>
-              <h2 className="text-lg font-semibold">{pickupcoordinates.lat + "/" + pickupcoordinates.lng}</h2>
+              <h2 className="text-lg font-semibold">{pickupcoordinates.ltd + "/" + pickupcoordinates.lng}</h2>
               <p className="text-gray-600 text-md">{pickup}</p>
             </div>
           </div>
@@ -73,7 +73,7 @@ const LookingForDriver = ({ setConfirmRidePanel, setLookingForDriverPanel, vehic
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <Navigation />
             <div>
-              <h2  className="text-lg font-semibold">{destinationcoordinates.lat + "/" + pickupcoordinates.lng}</h2>
+              <h2  className="text-lg font-semibold">{destinationcoordinates.ltd + "/" + pickupcoordinates.lng}</h2>
               <p className="text-gray-600 text-md">{destination}</p>
             </div>
           </div>

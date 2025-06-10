@@ -2,10 +2,10 @@ import React from 'react'
 import { MapPinHouse, Navigation, CircleDollarSign } from "lucide-react";
 import {useNavigate} from 'react-router-dom'
 
-const WaitingForDriver = ({setWaitingForDriverPanel}) => {
+const WaitingForDriver = ({setWaitingForDriverPanel, ride}) => {
   const navigate = useNavigate()
   return (
-    <div>
+    <div> 
     {" "}
     <div className="flex items-center justify-center w-full mb-2 p-3 ">
       <img
@@ -24,17 +24,18 @@ const WaitingForDriver = ({setWaitingForDriverPanel}) => {
         alt=""
       />
       <div className='text-right -mt-2'>
-        <h3 className='text-base font-medium text-gray-600'>Ahsin</h3>
-        <p className='text-xl font-semibold'>RIP 4059</p>
-        <p className='text-base font-medium text-gray-600'>Suzuki Alto</p>
+        <h3 className='text-base font-medium text-gray-600'>{ride?.captain?.fullname?.firstname + " " + ride?.captain?.fullname?.lastname}</h3>
+        <p className='text-xl font-semibold'>{ride?.captain?.vehicle?.plate}</p>
+        <p className='text-base font-medium text-gray-600'>{ride?.captain?.vehicle?.vehicleType}</p>
+        <h3 className='text-xl font-medium text-black'>{ride?.otp}</h3>
       </div>
 </div>
       <div className="w-full flex flex-col gap-4">
         <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
           <MapPinHouse />
-          <div>
-            <h2 className="text-lg font-semibold">CB-378, Sabri Street</h2>
-            <p className="text-gray-600 text-md">Munirabad, Wah Cantt</p>
+          <div> 
+            <h2 className="text-lg font-semibold">{ride?.pickup}</h2>
+            <p className="text-gray-600 text-md">{ride?.pickup}</p>
           </div>
         </div>
 
@@ -42,8 +43,8 @@ const WaitingForDriver = ({setWaitingForDriverPanel}) => {
         <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
           <Navigation />
           <div>
-            <h2  className="text-lg font-semibold">CB-1225, Muslim Street</h2>
-            <p className="text-gray-600 text-md">Ahmad Nagar, Wah Cantt</p>
+            <h2  className="text-lg font-semibold">{ride?.destination}</h2>
+            <p className="text-gray-600 text-md">{ride?.destination}</p>
           </div>
         </div>
         
@@ -52,7 +53,7 @@ const WaitingForDriver = ({setWaitingForDriverPanel}) => {
         <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
           <CircleDollarSign /> 
           <div>
-            <h2  className="text-lg font-semibold">193.20</h2>
+            <h2  className="text-lg font-semibold">{ride?.fare}</h2>
             <p className="text-gray-600 text-md">Cash Cash</p>
           </div>
         </div>

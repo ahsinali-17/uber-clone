@@ -9,8 +9,8 @@ const CaptainDetails = () => {
          <div className='flex justify-between items-center'>
         <div className='flex items-center gap-4 flex-start'>
         <img className='h-12 w-12 rounded-full object-cover' src="https://i.pinimg.com/564x/47/74/c1/4774c16ed57e7eff960a338e5a57d71d.jpg" alt="" />
-        <h4 className='text-2xl font-semibold capitalize'>{captain.fullname.firstname + " " 
-        + captain.fullname.lastname}</h4>
+        <h4 className='text-2xl font-semibold capitalize'>{captain?.fullname?.firstname + " " 
+        + captain?.fullname?.lastname}</h4>
         </div>
         <div>
           <h4 className='text-2xl font-semibold'>Rs. 500.20</h4>

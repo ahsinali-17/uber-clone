@@ -50,7 +50,6 @@ const sendMsgToSocketId = (msg, socketId) => {
     throw new Error("Socket.io is not initialized. Call initializeSocket first.");
   }
    if(io) {
-    console.log("sending ride to captain...");
     io.to(socketId).emit(msg.event, msg.data);
    }
  

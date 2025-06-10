@@ -15,11 +15,11 @@ connectdb();
 app.use(cors());
 app.use(express.json()); //to parse the incoming requests with JSON payloads
 app.use(express.urlencoded({extended: true})); //to parse the incoming requests with urlencoded payloads
+app.use(cookieParser()); // parse cookies before routes
 app.use('/users',userRoutes)
 app.use('/captain', captainRoutes);
 app.use('/maps', mapRoutes);
 app.use('/ride', rideRoutes);
-app.use(cookieParser());
 
 app.get('/', (req, res) => {
     res.send('Hello World');

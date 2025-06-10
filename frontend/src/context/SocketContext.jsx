@@ -12,7 +12,7 @@ const SocketProvider = ({ children }) => {
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
-      console.log('Connected to socket server');
+      console.log(`Connected to socket server ${newSocket.id}`);
     });
 
     newSocket.on('disconnect', () => {
