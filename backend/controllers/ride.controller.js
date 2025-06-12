@@ -58,6 +58,7 @@ const createRide = async (req, res) => {
         destination,
         user: req.user._id,
         fare: fare[vehicleType],
+        distance: fare.distance,
         otp: await createOTP(6),
         });
         await ride.save();
@@ -141,14 +142,43 @@ const startRide = async (req, res) => {
     if(captain.fullname.firstname !== ride.captain.fullname.firstname){
       return res.status(400).json({ error: "You are not authorized to start this ride" });
     }
+    ride.status = "ongoing";
+    await ride.save();
     res.status(200).json({message: "Ride started successfully", ride});
 
-    sendMsgToSocketId({event:"ride-started", data:{msg:"ride started..."}}, ride.user.socketId);
-    console.log("msg sent to user")
+    sendMsgToSocketId({event:"ride-started", data:{msg:"ride started...", ride: ride}}, ride.user.socketId);
   } catch (error) {
     console.log(error)
     return res.status(500).json({error: error.message});
   }
 }
+ 
+const endRide = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array()});
+  }
 
-module.exports = {createRide, getFare, acceptRide, startRide}
+  const {rideId} = req.body;
+  const captain = req.captain;
+  try {
+    const ride = await Ride.findOne({_id: rideId}).populate("captain").populate("user");
+    if(!ride){
+      return res.status(404).json({error: "Ride not found"});
+    }
+    if(captain.fullname.firstname !== ride.captain.fullname.firstname){
+      return res.status(400).json({ error: "You are not authorized to end this ride" });
+    }
+    if(ride.status !== "ongoing"){
+      return res.status(400).json({error: "Ride is not ongoing"});
+    }
+    await Ride.findOneAndUpdate({_id: rideId}, {status: "completed"});
+    res.status(200).json({message: "Ride completed successfully"});
+    sendMsgToSocketId({event:"ride-completed", data:{msg:"ride completed...", ride: ride}}, ride.user.socketId);
+    console.log("msg sent to user")
+  } catch (error) {
+    return res.status(500).json({error: error.message});
+
+}
+}
+module.exports = {createRide, getFare, acceptRide, startRide, endRide}

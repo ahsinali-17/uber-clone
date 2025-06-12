@@ -8,7 +8,7 @@ const UserContext = ({children}) => {
   const [error, setError] = useState('')
 
   const updateUser = (userData) => {
-    setcaptain(userData)
+    setuser(userData)
 }
   
   return (

@@ -2,18 +2,20 @@ import React,{useEffect, useState} from "react";
 import axios from "axios";
 import { MapPinHouse, Navigation, CircleDollarSign } from "lucide-react";
 
-const ConfirmRide = ({ setConfirmRidePanel, setLookingForDriverPanel, vehicle ="car", fare, pickup, destination, setRide }) => {
+const ConfirmRide = ({ setConfirmRidePanel, setLookingForDriverPanel, vehicle ="car", fare, pickup, destination, setRide, getCoordinates }) => {
 
   const [pickupcoordinates, setPickupCoordinates] = useState({});
   const [destinationcoordinates, setDestinationCoordinates] = useState({});
 
   useEffect(() => {
+    if( pickup.length>=3 && destination.length>=3){
       getCoordinates(pickup).then((data) => {
         setPickupCoordinates(data);
       });
       getCoordinates(destination).then((data) => {
         setDestinationCoordinates(data);
       });
+    }
   },[pickup, destination]);
    
   const vehicleImgs = {

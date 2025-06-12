@@ -46,12 +46,21 @@ router.get(
   "/start-ride",
   authMiddleware.authCaptain,
   query("rideId")
-    .isString()
+    .isMongoId()
     .isLength({ min: 3 }).withMessage("rideId is required"),
   query("otp")
     .isString()
     .isLength({ min: 3 }).withMessage("otp is required"),
   rideController.startRide
+);
+
+router.post(
+  "/finish-ride",
+  authMiddleware.authCaptain,
+  body("rideId")
+  .isMongoId()
+  .isLength({ min: 3 }).withMessage("rideId is required"),
+  rideController.endRide
 );
 
 module.exports = router;

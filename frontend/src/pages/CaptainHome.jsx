@@ -69,18 +69,17 @@ const CaptainHome = () => {
     }
   },[confirmRidePopup])
 
+  socket.on("new-ride", (data) => {
+    setRideDetails(data);
+    setRidePopup(true);
+  });  
+
   useEffect(() => {
     if(socket) {
       socket.emit("join", {userId: captain?._id, userType: "captain"});
     }else {
       console.log("Socket is not connected");
     }
-
-    socket.on("new-ride", (data) => {
-      //console.log(data)
-      setRideDetails(data);
-      setRidePopup(true);
-    });  
 
     const sendCaptainLocation = () => {
       navigator.geolocation.getCurrentPosition((position) => {

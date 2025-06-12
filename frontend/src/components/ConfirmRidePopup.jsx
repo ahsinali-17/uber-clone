@@ -20,7 +20,7 @@ const ConfirmRidePopup = ({setConfirmRidePopup, rideDetails}) => {
         })
         if (response.status === 200) {
             setConfirmRidePopup(false);
-            navigate('/captain-riding')
+            navigate('/captain-riding', {state: {ride: rideDetails}})
         } else {
             console.log("Error confirming ride", response.data.error);
         }

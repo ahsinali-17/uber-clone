@@ -168,7 +168,7 @@ const Home = () => {
     socket.on("ride-started", (data) => {
       setWaitingForDriverPanel(false);
       setLookingForDriverPanel(false);
-      navigate("/riding");
+      navigate('/riding', {state: {ride:data.ride}});
     })
   },[user,socket])
 
