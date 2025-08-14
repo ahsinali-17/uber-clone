@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import { useState, useRef } from 'react'
 import FinishRide from '../components/FinishRide';
 import { useLocation } from 'react-router-dom';
+import LiveLocation from '../components/LiveLocation';
 
 const CaptainRiding = () => {
      const [finishRidePanel, setFinishRidePanel] = useState(false);
@@ -46,11 +47,12 @@ const CaptainRiding = () => {
     </div>
    
     <div className="h-5/6 w-full">
-      <img
+      {/* <img
         className="h-full w-full object-cover object-right"
         src="https://www.medianama.com/wp-content/uploads/2018/06/Screenshot_20180619-112715.png.png"
         alt="map"
-      />
+      /> */}
+      <LiveLocation className="h-full"/>
     </div>
 
     <div onClick={()=>{setFinishRidePanel(true)}} className="h-1/6 w-full px-4 box-border p-2 bg-yellow-400 rounded-t-lg">

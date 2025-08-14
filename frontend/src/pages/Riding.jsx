@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import {SocketContext} from "../context/SocketContext";
+import LiveLocation from "../components/LiveLocation";
 
 const Riding = () => {
   const {socket} = useContext(SocketContext);
@@ -24,16 +25,17 @@ const Riding = () => {
     <div className="h-screen w-screen overflow-hidden">
       <Link
         to="/home"
-        className="fixed top-2 left-2 w-12 h-12 rounded-full bg-black flex items-center justify-center"
+        className="fixed top-2 right-2 w-12 h-12 rounded-full bg-black flex items-center justify-center"
       >
         <House className="text-white" />
       </Link>
       <div className="h-1/2 w-full">
-        <img
+        {/* <img
           className="h-full w-full object-cover object-right"
           src="https://www.medianama.com/wp-content/uploads/2018/06/Screenshot_20180619-112715.png.png"
           alt="map"
-        />
+        /> */}
+        <LiveLocation className="h-full"/>
       </div>
 
       <div className="h-1/2 w-full p-4 my-2">

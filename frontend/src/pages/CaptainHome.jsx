@@ -9,6 +9,7 @@ import ConfirmRidePopup from '../components/ConfirmRidePopup'
 import {SocketContext} from '../context/SocketContext.jsx'
 import { CaptainDataContext } from '../context/CaptainContext.jsx'
 import axios from 'axios'
+import LiveLocation from '../components/LiveLocation.jsx'
 
 const CaptainHome = () => {
   const [ridePopup, setRidePopup] = useState(false);
@@ -113,12 +114,13 @@ const CaptainHome = () => {
       </Link>
       </div>
      
-      <div className="h-3/5 w-full">
-        <img
+      <div className="h-3/5 w-full relative z-0">
+        {/* <img
           className="h-full w-full object-cover object-right"
           src="https://www.medianama.com/wp-content/uploads/2018/06/Screenshot_20180619-112715.png.png"
           alt="map"
-        />
+        /> */}
+        <LiveLocation className="h-full"/>
       </div>
 
       <div className="h-2/5 w-full p-4 my-4 flex flex-col justify-start gap-6 bg-white rounded-lg shadow-lg">

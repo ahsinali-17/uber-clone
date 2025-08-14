@@ -10,6 +10,7 @@ import axios from "axios";
 import { SocketContext } from "../context/SocketContext";
 import { UserDataContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import LiveLocation from "../components/LiveLocation";
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -176,17 +177,18 @@ const Home = () => {
     <div className="relative h-screen w-screen overflow-hidden">
       <div className="">
         <img
-          className="w-20 top-6 left-5 absolute"
+          className="w-20 top-6 right-6 absolute"
           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
           alt="uber"
         />
       </div>
       <div className="h-screen w-screen"> 
-        <img
+        {/* <img
           className="h-full w-full object-cover object-right"
           src="https://www.medianama.com/wp-content/uploads/2018/06/Screenshot_20180619-112715.png.png"
           alt="map"
-        />
+        /> */}
+        <LiveLocation className="h-[70%]"/>
       </div>
       
       {/*Find a trip*/}
@@ -225,28 +227,28 @@ const Home = () => {
           </form>
         </div>
 
-        <div ref={panelRef} className={` bg-white h-0`}>
+        <div ref={panelRef} className={` bg-white h-0 z-20`}>
           <SearchPanel currentInput={currentInput} destination={destination} pickup={pickup} setdestination= {setdestination} setpickup={setpickup} setpanelopen={setpanelopen} setOpenvehiclePanel={setOpenvehiclePanel} />
         </div>
       </div>
 
       {/*Choose a vehicle*/}
-      <div ref={vehiclePanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
+      <div ref={vehiclePanelRef} className="fixed h-auto bottom-0 z-20 bg-white w-full p-3 rounded-t-3xl">
        <VehiclePanel fare={fare} setVehicle={setVehicle} setOpenvehiclePanel={setOpenvehiclePanel} setConfirmRidePanel={setConfirmRidePanel} />
       </div>
 
       {/*Confirm ride*/}
-      <div ref={confirmRidePanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
+      <div ref={confirmRidePanelRef} className="fixed h-auto bottom-0 z-20 bg-white w-full p-3 rounded-t-3xl">
        <ConfirmRide setRide= {setRide} pickup={pickup} destination={destination} vehicle={vehicle} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setLookingForDriverPanel={setLookingForDriverPanel} getCoordinates={getCoordinates}/>
       </div>
 
       {/*Looking for a driver */}
-      <div ref={lookingForDriverPanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
+      <div ref={lookingForDriverPanelRef} className="fixed h-auto bottom-0 z-20 bg-white w-full p-3 rounded-t-3xl">
        <LookingForDriver ride={ride} pickup={pickup} destination={destination} vehicle={vehicle} fare={fare} setLookingForDriverPanel={setLookingForDriverPanel} setWaitingForDriverPanel={setWaitingForDriverPanel} getCoordinates={getCoordinates}/>
       </div>
 
       {/*Waiting for the driver*/}
-      <div ref={waitingForDriverPanelRef} className="fixed h-auto bottom-0 z-10 bg-white w-full p-3 rounded-t-3xl">
+      <div ref={waitingForDriverPanelRef} className="fixed h-auto bottom-0 z-20 bg-white w-full p-3 rounded-t-3xl">
        <WaitingForDriver setWaitingForDriverPanel={setWaitingForDriverPanel} ride={ride}/>
       </div>
     </div>
