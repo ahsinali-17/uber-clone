@@ -71,6 +71,7 @@ const CaptainHome = () => {
   },[confirmRidePopup])
 
   socket.on("new-ride", (data) => {
+    console.log("New ride request received:", data);
     setRideDetails(data);
     setRidePopup(true);
   });  

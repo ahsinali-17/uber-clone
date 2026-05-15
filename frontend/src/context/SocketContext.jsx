@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
 export const SocketContext = createContext();
@@ -8,7 +8,7 @@ const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // Initialize socket connection
-    const newSocket = io(`${import.meta.env.VITE_BASE_URL}`); // Replace with your server URL
+    const newSocket = io(`${import.meta.env.VITE_BASE_URL}`);
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

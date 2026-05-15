@@ -9,7 +9,8 @@ import WaitingForDriver from "../components/WaitingForDriver";
 import axios from "axios";
 import { SocketContext } from "../context/SocketContext";
 import { UserDataContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowLeftFromLine } from "lucide-react";
 import LiveLocation from "../components/LiveLocation";
 
 const Home = () => {
@@ -175,12 +176,18 @@ const Home = () => {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      <div className="">
+      <div className="fixed top-0 left-0 w-full flex items-center justify-between p-4 z-10">
         <img
-          className="w-20 top-6 right-6 absolute"
+          className="w-20"
           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
           alt="uber"
         />
+         <Link
+        to="/captain-login"
+        className="w-11 h-12 rounded-full bg-black flex items-center justify-center"
+      >
+        <ArrowLeftFromLine className="text-white" />
+      </Link>
       </div>
       <div className="h-screen w-screen"> 
         {/* <img

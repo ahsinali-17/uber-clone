@@ -33,10 +33,10 @@ const VehiclePanel = ({ setOpenvehiclePanel, setConfirmRidePanel, setVehicle, fa
         <h2 className="font-bold text-lg text-center">Rs. {fare.car}</h2>
       </div>
 
-      <div onClick={()=>{setVehicle("bike"); setConfirmRidePanel(true);}} className="flex items-center justify-evenly w-full mb-2 p-2 border-2 border-gray-100 active:border-black rounded-xl">
+      <div onClick={()=>{setVehicle("bike"); setConfirmRidePanel(true);}} className="flex items-center justify-between w-full mb-2 p-2 border-2 border-gray-100 active:border-black rounded-xl">
         <img
           className="h-10"
-          src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1648177797/assets/fc/ddecaa-2eee-48fe-87f0-614aa7cee7d3/original/Uber_Moto_312x208_pixels_Mobile.png"
+          src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=1344/height=896/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9lZjA5NThiZC1kNDMwLTQ1ZWYtYmU2Yi0zYmZiY2JmMDYyZjYucG5n"
           alt=""
         />
         <div className="flex flex-col justify-center w-1/2">
@@ -56,7 +56,7 @@ const VehiclePanel = ({ setOpenvehiclePanel, setConfirmRidePanel, setVehicle, fa
       <div onClick={()=>{setVehicle("auto"); setConfirmRidePanel(true);}} className="flex items-center justify-between w-full mb-2 p-3 border-2 border-gray-100 active:border-black rounded-xl">
         <img
           className="h-10"
-          src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1648431773/assets/1d/db8c56-0204-4ce4-81ce-56a11a07fe98/original/Uber_Auto_558x372_pixels_Desktop.png"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYol20lgh5HsIjDv19gT2lh9JUZfoolHS74w&s"
           alt=""
         />
         <div className="flex flex-col justify-center w-1/2">

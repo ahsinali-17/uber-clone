@@ -47,7 +47,9 @@ const RideSchema = new mongoose.Schema({
     select: false,
     required: true,
   }
-});
+}, { timestamps: true, 
+  expireAfterSeconds: 60 * 60 * 24 * 7 //expire after 7 days
+ });
 
 const Ride = mongoose.model("Ride", RideSchema); 
 module.exports = Ride;
