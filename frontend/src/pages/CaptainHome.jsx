@@ -70,18 +70,31 @@ const CaptainHome = () => {
     }
   },[confirmRidePopup])
 
-  socket.on("new-ride", (data) => {
-    console.log("New ride request received:", data);
-    setRideDetails(data);
-    setRidePopup(true);
-  });  
-
   useEffect(() => {
-    if(socket) {
-      socket.emit("join", {userId: captain?._id, userType: "captain"});
-    }else {
-      console.log("Socket is not connected");
+    if (!socket || !captain?._id) {
+      return undefined;
     }
+
+    const handleNewRide = (data) => {
+      console.log("New ride request received:", data);
+      setRideDetails(data);
+      setRidePopup(true);
+    };
+
+    const handleRideCancelled = (data) => {
+      setRideDetails((currentRide) => {
+        if (String(currentRide?._id) === String(data.rideId)) {
+          setRidePopup(false);
+          setConfirmRidePopup(false);
+          return null;
+        }
+        return currentRide;
+      });
+    };
+
+    socket.on("new-ride", handleNewRide);
+    socket.on("ride-cancelled", handleRideCancelled);
+    socket.emit("join", { userId: captain._id, userType: "captain" });
 
     const sendCaptainLocation = () => {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -95,8 +108,11 @@ const CaptainHome = () => {
      
     sendCaptainLocation();
     const interval = setInterval(sendCaptainLocation, 10000);
-    // cleanup interval on unmount
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      socket.off("new-ride", handleNewRide);
+      socket.off("ride-cancelled", handleRideCancelled);
+    };
   },[captain, socket]);
 
       return (
@@ -110,6 +126,9 @@ const CaptainHome = () => {
          <Link
         to="/captain-login"
         className="w-11 h-12 rounded-full bg-black flex items-center justify-center"
+        onClick={() => {
+          localStorage.removeItem("captoken");
+        }}
       >
         <ArrowLeftFromLine className="text-white" />
       </Link>

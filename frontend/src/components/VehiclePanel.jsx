@@ -15,7 +15,7 @@ const VehiclePanel = ({ setOpenvehiclePanel, setConfirmRidePanel, setVehicle, fa
           className="cursor-pointer"
         />
       </div>
-      <div onClick={()=>{setVehicle("car"); setConfirmRidePanel(true);}} className="flex items-center justify-between w-full mb-2 p-3 border-2 border-gray-100 active:border-black rounded-xl">
+      <div onClick={()=>{setVehicle("car"); setConfirmRidePanel(true); setOpenvehiclePanel(false);}} className="flex items-center justify-between w-full mb-2 p-3 border-2 border-gray-100 active:border-black rounded-xl cursor-pointer">
         <img
           className="h-10"
           src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png"
@@ -33,7 +33,7 @@ const VehiclePanel = ({ setOpenvehiclePanel, setConfirmRidePanel, setVehicle, fa
         <h2 className="font-bold text-lg text-center">Rs. {fare.car}</h2>
       </div>
 
-      <div onClick={()=>{setVehicle("bike"); setConfirmRidePanel(true);}} className="flex items-center justify-between w-full mb-2 p-2 border-2 border-gray-100 active:border-black rounded-xl">
+      <div onClick={()=>{setVehicle("bike"); setConfirmRidePanel(true); setOpenvehiclePanel(false);}} className="flex items-center justify-between w-full mb-2 p-2 border-2 border-gray-100 active:border-black rounded-xl cursor-pointer">
         <img
           className="h-10"
           src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=1344/height=896/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9lZjA5NThiZC1kNDMwLTQ1ZWYtYmU2Yi0zYmZiY2JmMDYyZjYucG5n"
@@ -53,7 +53,7 @@ const VehiclePanel = ({ setOpenvehiclePanel, setConfirmRidePanel, setVehicle, fa
         <h2 className="font-bold text-lg text-center">Rs. {fare.bike}</h2>
       </div>
 
-      <div onClick={()=>{setVehicle("auto"); setConfirmRidePanel(true);}} className="flex items-center justify-between w-full mb-2 p-3 border-2 border-gray-100 active:border-black rounded-xl">
+      <div onClick={()=>{setVehicle("auto"); setConfirmRidePanel(true); setOpenvehiclePanel(false);}} className="flex items-center justify-between w-full mb-2 p-3 border-2 border-gray-100 active:border-black rounded-xl cursor-pointer">
         <img
           className="h-10"
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYol20lgh5HsIjDv19gT2lh9JUZfoolHS74w&s"

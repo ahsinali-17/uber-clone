@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const rideController = require("../controllers/ride.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
-const { body, query } = require("express-validator");
+const { body, query, param } = require("express-validator");
 
 router.post(
   "/create", authMiddleware.authUser,
@@ -22,12 +22,25 @@ router.post(
 router.get(
   "/get-fare", authMiddleware.authUser,
   query("pickup")
+    .optional()
     .isString()
     .isLength({ min: 3 }).withMessage("pickup is required"),
   query("destination")
+    .optional()
     .isString()
     .isLength({ min: 3 }).withMessage("destination is required"),
+  query("pickupLat").optional().isFloat().withMessage("pickupLat must be numeric"),
+  query("pickupLng").optional().isFloat().withMessage("pickupLng must be numeric"),
+  query("destinationLat").optional().isFloat().withMessage("destinationLat must be numeric"),
+  query("destinationLng").optional().isFloat().withMessage("destinationLng must be numeric"),
   rideController.getFare
+);
+
+router.delete(
+  "/:rideId",
+  authMiddleware.authUser,
+  param("rideId").isMongoId().withMessage("Valid rideId is required"),
+  rideController.cancelRide
 );
  
 router.post(

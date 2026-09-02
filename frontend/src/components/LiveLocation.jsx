@@ -29,7 +29,7 @@ const LiveLocation = ({className}) => {
     return () => clearInterval(interval)
   }, [])
 
-  if (!position) return <div>Loading current location...</div>
+  if (!position) return <div className='text-center h-screen w-screen flex justify-center items-center'>Loading current location...</div>
 
   return (
     <MapContainer

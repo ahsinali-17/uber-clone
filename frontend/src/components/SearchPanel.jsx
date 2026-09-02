@@ -26,8 +26,8 @@ const SearchPanel = ({
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
-        ); // Replace with your API endpoint
-        if (response.status === 200) setLocations(response.data.predictions); // Adjust according to your API response structure
+        ); 
+        if (response.status === 200) setLocations(response.data.predictions); 
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
@@ -48,7 +48,7 @@ const SearchPanel = ({
               destination && pickup && setOpenvehiclePanel(true);
               destination && pickup && setpanelopen(false);
             }}
-            className="flex items-center justify-items-start gap-4 my-2 border-2 border-gray-100 active:border-black rounded-xl p-2"
+            className="flex items-center justify-items-start gap-4 my-2 border-2 border-gray-100 active:border-black rounded-xl p-2 cursor-pointer"
           >
             <h2 className="bg-[#eee] py-3 rounded-full w-10 h-10 flex justify-center items-center">
               <img

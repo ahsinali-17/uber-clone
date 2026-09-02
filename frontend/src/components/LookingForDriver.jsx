@@ -1,45 +1,45 @@
-import React,{useEffect,useState} from 'react'
+﻿import React, { useState } from 'react';
+import axios from 'axios';
 import { MapPinHouse, Navigation, CircleDollarSign } from "lucide-react";
-import axios from "axios";
 
-const LookingForDriver = ({ride, setLookingForDriverPanel, vehicle ="car", fare, pickup, destination,setWaitingForDriverPanel}) => {
+const LookingForDriver = ({
+  setLookingForDriverPanel,
+  vehicle = "car",
+  fare,
+  pickup,
+  destination,
+  ride,
+  setRide,
+  pickupCoordinates,
+  destinationCoordinates,
+}) => {
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState("");
 
-  const [pickupcoordinates, setPickupCoordinates] = useState({});
-  const [destinationcoordinates, setDestinationCoordinates] = useState({});
-
-  useEffect(() => {
-    const getCoordinates = async (address) => {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/maps/get-coordinates`,
-        {
-          params: { address },
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        console.error("Error fetching coordinates:", response.data.error);
-      }
+  const cancelRide = () => {
+    if (!ride?._id || isCancelling) {
+      return;
     }
 
-    if(pickup.length > 3 && destination.length > 3){
-      getCoordinates(pickup).then((data) => {
-        setPickupCoordinates(data);
-      });
-      getCoordinates(destination).then((data) => {
-        setDestinationCoordinates(data);
-      });
-    }
-  },[pickup, destination]);
+    setIsCancelling(true);
+    setCancelError("");
 
-
+    axios.delete(`${import.meta.env.VITE_BASE_URL}/ride/${ride._id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then(() => {
+        setRide({});
+        setLookingForDriverPanel(false);
+      })
+      .catch((error) => {
+        setCancelError(error.response?.data?.error || "Unable to cancel ride");
+      })
+      .finally(() => setIsCancelling(false));
+  }
   return (
     <div>
-      {" "}
       <div className="flex items-center justify-between w-full mb-2 p-3 ">
         <h2 className="text-2xl font-bold">Looking for Driver</h2>
         <img
@@ -47,7 +47,6 @@ const LookingForDriver = ({ride, setLookingForDriverPanel, vehicle ="car", fare,
           alt=""
           onClick={() => {
             setLookingForDriverPanel(false);
-            //setWaitingForDriverPanel(true);
           }}
           className="cursor-pointer"
         />
@@ -64,33 +63,42 @@ const LookingForDriver = ({ride, setLookingForDriverPanel, vehicle ="car", fare,
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <MapPinHouse />
             <div>
-              <h2 className="text-lg font-semibold">{pickupcoordinates.ltd + "/" + pickupcoordinates.lng}</h2>
+              <h2 className="text-lg font-semibold">
+                {pickupCoordinates ? `${pickupCoordinates.ltd}/${pickupCoordinates.lng}` : ""}
+              </h2>
               <p className="text-gray-600 text-md">{pickup}</p>
             </div>
           </div>
 
-          
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
             <Navigation />
             <div>
-              <h2  className="text-lg font-semibold">{destinationcoordinates.ltd + "/" + pickupcoordinates.lng}</h2>
+              <h2 className="text-lg font-semibold">
+                {destinationCoordinates ? `${destinationCoordinates.ltd}/${destinationCoordinates.lng}` : ""}
+              </h2>
               <p className="text-gray-600 text-md">{destination}</p>
             </div>
           </div>
-          
 
-         
           <div className="flex items-center justify-start gap-4 border-b-2 border-gray-200 py-2">
-            <CircleDollarSign /> 
+            <CircleDollarSign />
             <div>
-              <h2  className="text-lg font-semibold">{fare[vehicle]}</h2>
+              <h2 className="text-lg font-semibold">{fare?.[vehicle]}</h2>
               <p className="text-gray-600 text-md">Cash Cash</p>
             </div>
           </div>
-          </div>
+           {cancelError && <p className="text-sm text-red-600">{cancelError}</p>}
+           <button
+             className="bg-red-600 w-full text-center font-semibold text-white text-lg p-2 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+             onClick={cancelRide}
+             disabled={!ride?._id || isCancelling}
+           >
+             {isCancelling ? "Cancelling..." : "Cancel Ride"}
+           </button>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LookingForDriver
+export default LookingForDriver;
